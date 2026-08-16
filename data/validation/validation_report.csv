@@ -1,0 +1,16 @@
+Team,Variable,FIFA Value,FootyStats Value,Status
+England,Goals,20,20,PASS
+England,GoalsConceded,12,12,PASS
+England,CleanSheets,2,2,PASS
+France,Goals,20,20,PASS
+France,GoalsConceded,10,10,PASS
+France,CleanSheets,4,4,PASS
+Argentina,Goals,19,19,PASS
+Argentina,GoalsConceded,8,8,PASS
+Argentina,CleanSheets,2,2,PASS
+Spain,Goals,14,14,PASS
+Spain,GoalsConceded,1,1,PASS
+Spain,CleanSheets,7,7,PASS
+Brazil,Goals,10,10,PASS
+Brazil,GoalsConceded,4,4,PASS
+Brazil,CleanSheets,2,2,PASS
