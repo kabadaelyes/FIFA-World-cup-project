@@ -1,0 +1,12 @@
+# macOS
+.DS_Store
+
+# VS Code
+.vscode/
+
+# Python
+__pycache__/
+*.pyc
+
+# Generated validation report
+data/validation/validation_report.csv
