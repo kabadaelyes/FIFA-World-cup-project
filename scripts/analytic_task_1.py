@@ -114,3 +114,55 @@ print(team_averages.isnull().sum())
 print("\nPossession range:")
 print("Minimum:", team_match_possession["possession"].min())
 print("Maximum:", team_match_possession["possession"].max())
+
+# Find knockout-stage matches
+knockout_stage = matches[matches["Game Week"].isna()]
+
+# Get the teams that played in the knockout stage
+knockout_teams = pd.concat([
+    knockout_stage["home_team_name"],
+    knockout_stage["away_team_name"]
+]).drop_duplicates()
+
+print("\nNumber of qualified teams:")
+print(len(knockout_teams))
+
+print("\nQualified teams:")
+print(knockout_teams.tolist())
+
+# Add qualification status
+team_averages["qualification"] = "Eliminated"
+
+for team in knockout_teams:
+    team_averages.loc[
+        team_averages["team"] == team,
+        "qualification"
+    ] = "Qualified"
+
+
+print("\nQualification counts:")
+print(team_averages["qualification"].value_counts())
+
+print("\nTeam averages with qualification:")
+print(team_averages.to_string(index=False))
+
+print("\nFinal checks:")
+
+print("Number of teams:", len(team_averages))
+
+print("\nQualification:")
+print(team_averages["qualification"].value_counts())
+
+print("\nMissing values:")
+print(team_averages.isnull().sum())
+
+processed_folder = project_folder / "data" / "processed"
+
+processed_folder.mkdir(exist_ok=True)
+
+output_file = processed_folder / "task1_team_possession.csv"
+
+team_averages.to_csv(output_file, index=False)
+
+print("\nProcessed dataset saved to:")
+print(output_file)
