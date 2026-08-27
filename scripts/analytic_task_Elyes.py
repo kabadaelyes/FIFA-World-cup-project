@@ -1,6 +1,7 @@
 import pandas as pd
 from pathlib import Path
 from scipy import stats
+import statsmodels.stats.weightstats as stm
 
 
 # Find the project folder and load the dataset
@@ -139,34 +140,51 @@ print("Median:", eliminated_possession.median())
 print("SD:", eliminated_possession.std())
 
 
-# Difference between the means
+# Difference between the two sample means
 difference = (
     qualified_possession.mean()
     - eliminated_possession.mean()
 )
 
 
-# 95% confidence interval
-standard_error = (
-    (qualified_possession.std() ** 2 / len(qualified_possession))
-    + (eliminated_possession.std() ** 2 / len(eliminated_possession))
+# Pooled standard deviation
+pooled_sd = (
+    (
+        (len(qualified_possession) - 1)
+        * qualified_possession.var()
+        + (len(eliminated_possession) - 1)
+        * eliminated_possession.var()
+    )
+    / (
+        len(qualified_possession)
+        + len(eliminated_possession)
+        - 2
+    )
 ) ** 0.5
 
-df = len(qualified_possession) + len(eliminated_possession) - 2
 
-t_value = stats.t.ppf(0.975, df)
+# Standard error of the difference
+standard_error = pooled_sd * (
+    1 / len(qualified_possession)
+    + 1 / len(eliminated_possession)
+) ** 0.5
 
-margin_of_error = t_value * standard_error
 
-lower = difference - margin_of_error
-upper = difference + margin_of_error
-
+# 95% confidence interval
+lower, upper = stm._tconfint_generic(
+    difference,
+    standard_error,
+    dof=len(qualified_possession)
+    + len(eliminated_possession)
+    - 2,
+    alpha=0.05,
+    alternative="two-sided"
+)
 
 print("\n95% Confidence Interval:")
 print("Difference:", difference)
 print("Lower:", lower)
 print("Upper:", upper)
-
 
 # One-tailed two-sample t-test
 t_stat, two_tailed_p = stats.ttest_ind(
@@ -176,6 +194,7 @@ t_stat, two_tailed_p = stats.ttest_ind(
 )
 
 one_tailed_p = two_tailed_p / 2
+
 
 print("\nTwo-sample t-test:")
 print("t-statistic:", t_stat)
