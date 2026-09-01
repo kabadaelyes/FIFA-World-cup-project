@@ -21,3 +21,7 @@ print(f"Number of defenders with at least 1 duel: {len(defenders)}")
 defenders["duel_win_rate"] = (
     defenders["duels_won_total_overall"] / defenders["duels_total_overall"]
 )
+
+# STEP 4: Sampling from the population of defenders
+sample_size = 100
+sample = defenders.sample(n=min(sample_size, len(defenders)), random_state=42)
