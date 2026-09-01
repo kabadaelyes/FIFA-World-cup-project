@@ -2,6 +2,7 @@ import pandas as pd
 from pathlib import Path
 from scipy import stats
 import statsmodels.stats.weightstats as stm
+import matplotlib.pyplot as plt
 
 
 # Find the project folder and load the dataset
@@ -223,3 +224,23 @@ one_tailed_p = two_tailed_p / 2
 print("\nTwo-sample t-test:")
 print("t-statistic:", t_stat)
 print("One-tailed p-value:", one_tailed_p)
+
+# Check the distribution of average possession
+plt.boxplot(
+    [qualified_possession, eliminated_possession],
+    tick_labels=["Qualified", "Eliminated"]
+)
+
+plt.ylabel("Average group-stage possession (%)")
+plt.title("Average Possession by Qualification Status")
+
+plt.show()
+
+# Statistical decision:
+# Since the one-tailed p-value is less than 0.05,
+# we reject the null hypothesis.
+
+# Conclusion:
+# There is statistically significant evidence that
+# qualified teams had higher average group-stage
+# possession than eliminated teams.
