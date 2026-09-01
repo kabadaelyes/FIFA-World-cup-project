@@ -20,7 +20,7 @@ print("Total matches:", len(matches))
 print("Group-stage matches:", len(group_stage))
 
 
-# Get possession for each team
+# Get possession for home and away teams
 home_possession = group_stage[
     ["home_team_name", "home_team_possession"]
 ].copy()
@@ -41,7 +41,7 @@ team_possession = pd.concat(
 )
 
 
-# Calculate each team's group-stage possession
+# Calculate each team's average group-stage possession
 team_averages = (
     team_possession
     .groupby("team")["possession"]
@@ -57,7 +57,7 @@ team_averages.columns = [
 ]
 
 
-# Check that every team has three matches
+# Check that every team played three group-stage matches
 matches_per_team = team_possession["team"].value_counts()
 
 print("Number of teams:", len(team_averages))
@@ -88,7 +88,6 @@ print("\nQualification:")
 print(team_averages["qualification"].value_counts())
 
 
-
 # Save the processed population dataset
 processed_folder = (
     project_folder
@@ -97,21 +96,33 @@ processed_folder = (
     / "elyes_possession"
 )
 
-processed_folder.mkdir(parents=True, exist_ok=True)
+processed_folder.mkdir(
+    parents=True,
+    exist_ok=True
+)
 
 output_file = processed_folder / "team_possession.csv"
 
-team_averages.to_csv(output_file, index=False)
+team_averages.to_csv(
+    output_file,
+    index=False
+)
 
 
-# Take a stratified sample of 30 teams
+# Take a stratified random sample of 30 teams
 qualified = team_averages[
     team_averages["qualification"] == "Qualified"
-].sample(n=15, random_state=42)
+].sample(
+    n=15,
+    random_state=42
+)
 
 eliminated = team_averages[
     team_averages["qualification"] == "Eliminated"
-].sample(n=15, random_state=42)
+].sample(
+    n=15,
+    random_state=42
+)
 
 sample = pd.concat(
     [qualified, eliminated],
@@ -124,13 +135,15 @@ print(sample["qualification"].value_counts())
 
 
 # Get possession values for each group
-qualified_possession = sample[
-    sample["qualification"] == "Qualified"
-]["average_possession"]
+qualified_possession = sample.loc[
+    sample["qualification"] == "Qualified",
+    "average_possession"
+]
 
-eliminated_possession = sample[
-    sample["qualification"] == "Eliminated"
-]["average_possession"]
+eliminated_possession = sample.loc[
+    sample["qualification"] == "Eliminated",
+    "average_possession"
+]
 
 
 # Descriptive statistics
@@ -181,9 +194,11 @@ standard_error = pooled_sd * (
 lower, upper = stm._tconfint_generic(
     difference,
     standard_error,
-    dof=len(qualified_possession)
-    + len(eliminated_possession)
-    - 2,
+    dof=(
+        len(qualified_possession)
+        + len(eliminated_possession)
+        - 2
+    ),
     alpha=0.05,
     alternative="two-sided"
 )
@@ -193,15 +208,17 @@ print("Difference:", difference)
 print("Lower:", lower)
 print("Upper:", upper)
 
-# One-tailed two-sample t-test
+
+# Two-sample t-test
 t_stat, two_tailed_p = stats.ttest_ind(
     qualified_possession,
     eliminated_possession,
     equal_var=True
 )
 
+# Our alternative hypothesis is that qualified teams
+# have higher average possession
 one_tailed_p = two_tailed_p / 2
-
 
 print("\nTwo-sample t-test:")
 print("t-statistic:", t_stat)
