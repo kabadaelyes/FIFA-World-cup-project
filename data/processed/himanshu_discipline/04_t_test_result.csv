@@ -1,0 +1,2 @@
+t_statistic,p_value,alpha,decision,percentage_difference
+2.2631,0.0488,0.05,Reject the null hypothesis,44.64
