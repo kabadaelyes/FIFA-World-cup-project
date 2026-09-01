@@ -88,11 +88,18 @@ print("\nQualification:")
 print(team_averages["qualification"].value_counts())
 
 
-# Save the processed population dataset
-processed_folder = project_folder / "data" / "processed"
-processed_folder.mkdir(exist_ok=True)
 
-output_file = processed_folder / "task1_team_possession.csv"
+# Save the processed population dataset
+processed_folder = (
+    project_folder
+    / "data"
+    / "processed"
+    / "elyes_possession"
+)
+
+processed_folder.mkdir(parents=True, exist_ok=True)
+
+output_file = processed_folder / "team_possession.csv"
 
 team_averages.to_csv(output_file, index=False)
 
