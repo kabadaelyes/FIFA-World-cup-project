@@ -16,3 +16,8 @@ defenders = df[df["position"] == "Defender"].copy()
 defenders = defenders[defenders["duels_total_overall"] > 0].copy()
 
 print(f"Number of defenders with at least 1 duel: {len(defenders)}")
+
+# STEP 3: Data preparation - create the proportion variable
+defenders["duel_win_rate"] = (
+    defenders["duels_won_total_overall"] / defenders["duels_total_overall"]
+)
