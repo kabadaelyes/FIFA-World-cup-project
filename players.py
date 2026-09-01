@@ -10,3 +10,9 @@ from scipy import stats
 
 # STEP 1: Load the data
 df = pd.read_csv("world-cup-players-2026-stats.csv")
+
+# STEP 2: Data wrangling - keep only defenders who contested at least one duel
+defenders = df[df["position"] == "Defender"].copy()
+defenders = defenders[defenders["duels_total_overall"] > 0].copy()
+
+print(f"Number of defenders with at least 1 duel: {len(defenders)}")
