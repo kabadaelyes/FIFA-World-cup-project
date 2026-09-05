@@ -48,3 +48,10 @@ print(younger.describe())
 
 print("\nOlder defenders:")
 print(older.describe())
+
+# STEP 7: 95% Confidence interval for the mean duel win rate
+mean_rate = sample["duel_win_rate"].mean()
+sem = stats.sem(sample["duel_win_rate"])
+ci = stats.t.interval(confidence=0.95, df=len(sample) - 1, loc=mean_rate, scale=sem)
+print(f"\n95% Confidence interval for mean duel win rate: {ci}")
+print(f"(Sample mean = {mean_rate:.3f})")
