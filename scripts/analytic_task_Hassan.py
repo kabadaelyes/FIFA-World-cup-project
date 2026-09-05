@@ -24,3 +24,16 @@ print(f"Number of defenders with at least 1 duel: {len(defenders)}")
 defenders["duel_win_rate"] = (
     defenders["duels_won_total_overall"] / defenders["duels_total_overall"]
 )
+
+# STEP 4: Sampling from the population of defenders
+sample_size = 100
+sample = defenders.sample(n=min(sample_size, len(defenders)), random_state=42)
+
+
+# STEP 5: Split into two groups by age (median split)
+median_age = sample["age"].median()
+younger = sample[sample["age"] <= median_age]["duel_win_rate"]
+older = sample[sample["age"] > median_age]["duel_win_rate"]
+
+print(f"\nMedian age used as split point: {median_age}")
+print(f"Younger group n = {len(younger)}, Older group n = {len(older)}")
