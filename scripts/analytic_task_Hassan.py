@@ -55,3 +55,14 @@ sem = stats.sem(sample["duel_win_rate"])
 ci = stats.t.interval(confidence=0.95, df=len(sample) - 1, loc=mean_rate, scale=sem)
 print(f"\n95% Confidence interval for mean duel win rate: {ci}")
 print(f"(Sample mean = {mean_rate:.3f})")
+
+# STEP 8: Two-sample t-test
+t_stat, p_value = stats.ttest_ind(younger, older, equal_var=False)
+print(f"\nTwo-sample t-test results:")
+print(f"t-statistic = {t_stat:.3f}")
+print(f"p-value = {p_value:.4f}")
+
+if p_value < 0.05:
+    print("Result: statistically significant difference (p < 0.05)")
+else:
+    print("Result: no statistically significant difference (p >= 0.05)")
