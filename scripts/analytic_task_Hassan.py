@@ -37,3 +37,14 @@ older = sample[sample["age"] > median_age]["duel_win_rate"]
 
 print(f"\nMedian age used as split point: {median_age}")
 print(f"Younger group n = {len(younger)}, Older group n = {len(older)}")
+
+# STEP 6: Descriptive statistics
+print("\n--- Descriptive statistics: duel win rate ---")
+print("Overall sample:")
+print(sample["duel_win_rate"].describe())
+
+print("\nYounger defenders:")
+print(younger.describe())
+
+print("\nOlder defenders:")
+print(older.describe())
