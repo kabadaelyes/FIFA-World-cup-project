@@ -39,12 +39,12 @@ team_shots = pd.concat([home_shots, away_shots], ignore_index=True)
 
 
 # Calculate total goals and total shots for each team
-team_stats = pd.merge(team_goals.groupby("Team")["Goals"].sum().reset_index(),
-                         team_shots.groupby("Team")["Shots"].sum().reset_index(), on="Team")
+team_stats = pd.merge(team_shots.groupby("Team")["Shots"].sum().reset_index(),
+                      team_goals.groupby("Team")["Goals"].sum().reset_index(), on="Team")
 
 
-# Calculate each team's overall group-stage goals per shot
-team_stats["Goals/Shots"] = (team_stats["Goals"] / team_stats["Shots"]).round(4)
+# Calculate each team's overall group-stage shots per goal
+team_stats["Shots/Goal"] = (team_stats["Shots"] / team_stats["Goals"]).round(4)
 
 
 # Check that every team has three matches
@@ -67,20 +67,20 @@ print("\nQualification:")
 print(team_stats["qualification"].value_counts())
 
 
-# Calculate mean, median and standard deviation of goals/shots for each qualification group
-group_statistics = (team_stats.groupby("qualification")["Goals/Shots"].agg(["mean", "median", "std"]))
-group_statistics.columns = ["Average_goals_per_shot","Median_goals_per_shot","Std_goals_per_shot"]
+# Calculate mean, median and standard deviation of shots/goal for each qualification group
+group_statistics = (team_stats.groupby("qualification")["Shots/Goal"].agg(["mean", "median", "std"]))
+group_statistics.columns = ["Average_shots_per_goal","Median_shots_per_goal","Std_shots_per_goal"]
 
 
 # Add the group statistics to each team
 team_stats = team_stats.join(group_statistics,on="qualification")
 
-print("\nGoals/Shots by qualification:")
+print("\nShots/Goal by qualification:")
 print(team_stats)
 
 
 # Save the processed population dataset
 processed_folder = (project_folder / "data" / "processed" / "max_attack")
 processed_folder.mkdir(parents=True, exist_ok=True)
-output_file = processed_folder / "team_goals_shots_rate.csv"
+output_file = processed_folder / "team_shots_goal_rate.csv"
 team_stats.to_csv(output_file, index=False)
