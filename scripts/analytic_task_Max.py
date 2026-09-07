@@ -67,6 +67,10 @@ print("\nQualification:")
 print(team_stats["qualification"].value_counts())
 
 
+# Calculate each team's overall group-stage shots per goal
+team_stats["Shots/Goal"] = (team_stats["Shots"] / team_stats["Goals"].replace(0, np.nan)).round(4)
+
+
 # Calculate mean, median and standard deviation of shots/goal for each qualification group
 group_statistics = (team_stats.groupby("qualification")["Shots/Goal"].agg(["mean", "median", "std"]))
 group_statistics.columns = ["Average_shots_per_goal","Median_shots_per_goal","Std_shots_per_goal"]
@@ -74,9 +78,6 @@ group_statistics.columns = ["Average_shots_per_goal","Median_shots_per_goal","St
 
 # Add the group statistics to each team
 team_stats = team_stats.join(group_statistics,on="qualification")
-
-print("\nShots/Goal by qualification:")
-print(team_stats)
 
 
 # Save the processed population dataset
