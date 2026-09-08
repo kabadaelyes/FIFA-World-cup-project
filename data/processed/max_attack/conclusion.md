@@ -8,4 +8,5 @@ Null hypothesis: Qualified teams do not have a lower average shots per goal than
 **One-tailed p-value:** 0.0203
 
 Decision: Reject the null hypothesis.
+
 Conclusion: Qualified teams indeed have a lower average shots per goal than eliminated teams.
