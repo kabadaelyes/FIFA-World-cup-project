@@ -281,7 +281,7 @@ with open(conclusion_file, "w") as file:
 
     file.write(
         "Null hypothesis: Qualified teams do not have a lower "
-        "average shots per goal than eliminated teams.\n"
+        "average shots per goal than eliminated teams.\n\n"
     )
 
     file.write(
