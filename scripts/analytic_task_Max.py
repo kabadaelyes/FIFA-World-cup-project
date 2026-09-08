@@ -3,7 +3,7 @@ import numpy as np
 import statsmodels.stats.weightstats as stm
 import matplotlib.pyplot as plt
 from pathlib import Path
-from scipy import stats 
+from scipy import stats
 
 
 # Find the project folder and load the dataset
@@ -39,16 +39,25 @@ team_shots = pd.concat([home_shots, away_shots], ignore_index=True)
 
 
 # Calculate total goals and total shots for each team
-team_stats = pd.merge(team_shots.groupby("Team")["Shots"].sum().reset_index(),
-                      team_goals.groupby("Team")["Goals"].sum().reset_index(), on="Team")
+team_stats = pd.merge(
+    team_shots.groupby("Team")["Shots"].sum().reset_index(),
+    team_goals.groupby("Team")["Goals"].sum().reset_index(),
+    on="Team"
+)
 
 
 # Calculate each team's overall group-stage shots per goal
-team_stats["Shots/Goal"] = (team_stats["Shots"] / team_stats["Goals"]).round(4)
+# Teams with zero goals cannot have a defined shots/goal value
+team_stats["Shots/Goal"] = (
+    team_stats["Shots"] /
+    team_stats["Goals"].replace(0, np.nan)
+).round(4)
 
 
 # Check that every team has three matches
-matches_per_team = pd.concat([home_goals["Team"], away_goals["Team"]]).value_counts()
+matches_per_team = pd.concat(
+    [home_goals["Team"], away_goals["Team"]]
+).value_counts()
 
 print("Number of teams:", len(team_stats))
 print("Teams with 3 matches:", (matches_per_team == 3).sum())
@@ -56,49 +65,63 @@ print("Teams with 3 matches:", (matches_per_team == 3).sum())
 
 # Find teams that reached the knockout stage
 knockout_stage = matches[matches["Game Week"].isna()]
-knockout_teams = pd.concat([knockout_stage["home_team_name"],knockout_stage["away_team_name"]]).drop_duplicates()
+
+knockout_teams = pd.concat(
+    [
+        knockout_stage["home_team_name"],
+        knockout_stage["away_team_name"]
+    ]
+).drop_duplicates()
 
 
 # Add qualification status
 team_stats["qualification"] = "Eliminated"
-team_stats.loc[team_stats["Team"].isin(knockout_teams),"qualification"] = "Qualified"
+
+team_stats.loc[
+    team_stats["Team"].isin(knockout_teams),
+    "qualification"
+] = "Qualified"
+
 
 print("\nQualification:")
 print(team_stats["qualification"].value_counts())
 
 
-# Calculate each team's overall group-stage shots per goal
-team_stats["Shots/Goal"] = (team_stats["Shots"] / team_stats["Goals"].replace(0, np.nan)).round(4)
-
-
-# Calculate mean, median and standard deviation of shots/goal for each qualification group
-group_statistics = (team_stats.groupby("qualification")["Shots/Goal"].agg(["mean", "median", "std"]))
-group_statistics.columns = ["Average_shots_per_goal","Median_shots_per_goal","Std_shots_per_goal"]
-
-
-# Add the group statistics to each team
-team_stats = team_stats.join(group_statistics,on="qualification")
-
-
-# Save the processed population dataset
-processed_folder = (project_folder / "data" / "processed" / "max_attack")
-processed_folder.mkdir(parents=True, exist_ok=True)
-output_file = processed_folder / "team_shots_goal_rate.csv"
-team_stats.to_csv(output_file, index=False)
-
-
-# Take a stratified sample of 20 teams with only valid shots/goal
+# Only keep teams with a valid shots/goal value
+# Teams with zero goals are excluded because shots/goal is undefined
 valid_teams = team_stats.dropna(subset=["Shots/Goal"])
-qualified = valid_teams[valid_teams["qualification"] == "Qualified"].sample(n=10, random_state=42)
-eliminated = valid_teams[valid_teams["qualification"] == "Eliminated"].sample(n=10, random_state=42)
-sample = pd.concat([qualified, eliminated], ignore_index=True)
+
+
+# Take a stratified sample of 30 teams
+# 15 qualified and 15 eliminated
+qualified = valid_teams[
+    valid_teams["qualification"] == "Qualified"
+].sample(n=15, random_state=42)
+
+eliminated = valid_teams[
+    valid_teams["qualification"] == "Eliminated"
+].sample(n=15, random_state=42)
+
+sample = pd.concat(
+    [qualified, eliminated],
+    ignore_index=True
+)
+
+
 print("\nSample size:", len(sample))
 print(sample["qualification"].value_counts())
 
 
 # Get shots/goal values for each group
-qualified_shots_goal_rate = sample.loc[sample["qualification"] == "Qualified","Shots/Goal"]
-eliminated_shots_goal_rate  = sample.loc[sample["qualification"] == "Eliminated","Shots/Goal"]
+qualified_shots_goal_rate = sample.loc[
+    sample["qualification"] == "Qualified",
+    "Shots/Goal"
+]
+
+eliminated_shots_goal_rate = sample.loc[
+    sample["qualification"] == "Eliminated",
+    "Shots/Goal"
+]
 
 
 # Descriptive statistics
@@ -116,48 +139,96 @@ print("STD:", eliminated_shots_goal_rate.std())
 
 
 # Create descriptive statistics table
-descriptive_statistics = pd.DataFrame({"qualification": ["Qualified", "Eliminated"],
-    "Average": [qualified_shots_goal_rate.mean(), eliminated_shots_goal_rate.mean()],
-    "Median": [qualified_shots_goal_rate.median(), eliminated_shots_goal_rate.median()],
-    "Std": [qualified_shots_goal_rate.std(), eliminated_shots_goal_rate.std()]})
+descriptive_statistics = pd.DataFrame(
+    {
+        "qualification": ["Qualified", "Eliminated"],
+        "Average": [
+            qualified_shots_goal_rate.mean(),
+            eliminated_shots_goal_rate.mean()
+        ],
+        "Median": [
+            qualified_shots_goal_rate.median(),
+            eliminated_shots_goal_rate.median()
+        ],
+        "Std": [
+            qualified_shots_goal_rate.std(),
+            eliminated_shots_goal_rate.std()
+        ]
+    }
+)
+
 
 # Round to the 4th decimal value
-descriptive_statistics[["Average", "Median", "Std"]] = (descriptive_statistics[["Average", "Median", "Std"]].round(4))
+descriptive_statistics[
+    ["Average", "Median", "Std"]
+] = descriptive_statistics[
+    ["Average", "Median", "Std"]
+].round(4)
 
 
 # Difference between the two sample means
-difference = (qualified_shots_goal_rate.mean() - eliminated_shots_goal_rate.mean())
+# A negative value means qualified teams had fewer shots per goal
+difference = (
+    qualified_shots_goal_rate.mean()
+    - eliminated_shots_goal_rate.mean()
+)
 
 
 # Pooled standard deviation
-pooled_sd = (((len(qualified_shots_goal_rate) - 1)
-             * qualified_shots_goal_rate.var()
-             + (len(eliminated_shots_goal_rate) - 1)
-             * eliminated_shots_goal_rate.var())
-            / 
-            (len(qualified_shots_goal_rate)
-            + len(eliminated_shots_goal_rate) - 2)) ** 0.5
+pooled_sd = (
+    (
+        (len(qualified_shots_goal_rate) - 1)
+        * qualified_shots_goal_rate.var()
+        +
+        (len(eliminated_shots_goal_rate) - 1)
+        * eliminated_shots_goal_rate.var()
+    )
+    /
+    (
+        len(qualified_shots_goal_rate)
+        + len(eliminated_shots_goal_rate)
+        - 2
+    )
+) ** 0.5
 
 
 # Standard error of the difference
-standard_error = pooled_sd * (1 / len(qualified_shots_goal_rate) + 1 / len(eliminated_shots_goal_rate)) ** 0.5
+standard_error = pooled_sd * (
+    1 / len(qualified_shots_goal_rate)
+    + 1 / len(eliminated_shots_goal_rate)
+) ** 0.5
 
 
 # 95% confidence interval
-lower, upper = stm._tconfint_generic(difference, standard_error, 
-                                    dof=(len(qualified_shots_goal_rate) + len(eliminated_shots_goal_rate) - 2),
-                                    alpha=0.05,
-                                    alternative="two-sided")
+lower, upper = stm._tconfint_generic(
+    difference,
+    standard_error,
+    dof=(
+        len(qualified_shots_goal_rate)
+        + len(eliminated_shots_goal_rate)
+        - 2
+    ),
+    alpha=0.05,
+    alternative="two-sided"
+)
 
-print("95% Confidence Interval:\n")
+
+print("\n95% Confidence Interval:")
 print("Difference:", difference)
 print("Lower:", lower)
 print("Upper:", upper)
 
 
-# Two-sample t-test
-# Hypothesis: Qualified teams have a lower average Shots/Goal (lower Shots/Goal = better efficiency)
-t_stat, one_tailed_p = stats.ttest_ind(qualified_shots_goal_rate, eliminated_shots_goal_rate, equal_var=True, alternative="less")
+# One-tailed two-sample t-test
+# H0: Qualified teams do not have a lower average Shots/Goal
+# H1: Qualified teams have a lower average Shots/Goal
+t_stat, one_tailed_p = stats.ttest_ind(
+    qualified_shots_goal_rate,
+    eliminated_shots_goal_rate,
+    equal_var=True,
+    alternative="less"
+)
+
 
 print("\nTwo-sample t-test:")
 print("t-statistic:", t_stat)
@@ -165,40 +236,167 @@ print("One-tailed p-value:", one_tailed_p)
 
 
 # Check the distribution of shots/goal
-plt.boxplot([qualified_shots_goal_rate, eliminated_shots_goal_rate],tick_labels=["Qualified", "Eliminated"])
+plt.boxplot(
+    [
+        qualified_shots_goal_rate,
+        eliminated_shots_goal_rate
+    ],
+    tick_labels=["Qualified", "Eliminated"]
+)
+
 plt.ylabel("Shots per Goal")
 plt.title("Shots per Goal by Qualification Status")
 
 
-# Create a result paper
-processed_folder = (project_folder / "data" / "processed" / "max_attack")
-processed_folder.mkdir(parents=True, exist_ok=True)
-conclusion_file = processed_folder / "conclusion.md"
+# Create processed folder
+processed_folder = (
+    project_folder
+    / "data"
+    / "processed"
+    / "max_attack"
+)
 
-with open(conclusion_file, "w") as file:
-    file.write("Statistical Analysis Conclusion\n\n")
-
-    file.write("Method: A one-tailed two-sample t-test was conducted using a significance level of 0.05.\n\n")
-
-    file.write("Null hypothesis: Qualified teams do not have a lower average shots per goal than eliminated teams.\n")
-    file.write("(Lower average shots per goal = better attack)\n\n")
-    file.write(f"**One-tailed p-value:** {one_tailed_p:.4f}\n\n")
-    if one_tailed_p < 0.05:
-        file.write("Decision: Reject the null hypothesis.\n\n")
-        file.write("Conclusion: Qualified teams indeed have a lower average shots per goal than eliminated teams.")
-    else:
-        file.write("Decision: Accept the null hypothesis.\n\n")
-        file.write("Conclusion: Qualified teams indeed don't have a lower average shots per goal than eliminated teams.")
+processed_folder.mkdir(
+    parents=True,
+    exist_ok=True
+)
 
 
 # Save the processed population dataset
-processed_folder = (project_folder / "data" / "processed" / "max_attack")
-processed_folder.mkdir(parents=True, exist_ok=True)
+output_file = processed_folder / "team_shots_goal_rate.csv"
+team_stats.to_csv(output_file, index=False)
+
+
+# Create a result paper
+conclusion_file = processed_folder / "conclusion.md"
+
+with open(conclusion_file, "w") as file:
+
+    file.write("Statistical Analysis Conclusion\n\n")
+
+    file.write(
+        "Method: A one-tailed two-sample t-test was conducted "
+        "using a significance level of 0.05.\n\n"
+    )
+
+    file.write(
+        "Null hypothesis: Qualified teams do not have a lower "
+        "average shots per goal than eliminated teams.\n"
+    )
+
+    file.write(
+        "Alternative hypothesis: Qualified teams have a lower "
+        "average shots per goal than eliminated teams.\n\n"
+    )
+
+    file.write(
+        "(Lower average shots per goal = better attack)\n\n"
+    )
+
+    file.write(
+        f"**Qualified average:** "
+        f"{qualified_shots_goal_rate.mean():.4f}\n\n"
+    )
+
+    file.write(
+        f"**Eliminated average:** "
+        f"{eliminated_shots_goal_rate.mean():.4f}\n\n"
+    )
+
+    file.write(
+        f"**Difference:** {difference:.4f}\n\n"
+    )
+
+    file.write(
+        f"**95% CI:** {lower:.4f} to {upper:.4f}\n\n"
+    )
+
+    file.write(
+        f"**One-tailed p-value:** {one_tailed_p:.4f}\n\n"
+    )
+
+    if one_tailed_p < 0.05:
+
+        file.write(
+            "Decision: Reject the null hypothesis.\n\n"
+        )
+
+        file.write(
+            "Conclusion: There is statistically significant "
+            "evidence that qualified teams had a lower average "
+            "shots per goal than eliminated teams."
+        )
+
+    else:
+
+        file.write(
+            "Decision: Fail to reject the null hypothesis.\n\n"
+        )
+
+        file.write(
+            "Conclusion: There is insufficient statistical "
+            "evidence that qualified teams had a lower average "
+            "shots per goal than eliminated teams."
+        )
+
+
+# Present the conclusion
+alpha = 0.05
+
+print("\nStatistical Decision:")
+
+if one_tailed_p < alpha:
+
+    print("Reject the null hypothesis.")
+    print(
+        "There is sufficient evidence that qualified teams "
+        "have a lower average Shots/Goal."
+    )
+
+else:
+
+    print("Fail to reject the null hypothesis.")
+    print(
+        "There is insufficient evidence that qualified teams "
+        "have a lower average Shots/Goal."
+    )
+
+
+print("\nConclusion:")
+
+if one_tailed_p < alpha:
+
+    print(
+        "Qualified teams are likely to be better at turning "
+        "shots into goals than eliminated teams."
+    )
+
+else:
+
+    print(
+        "There is insufficient evidence that qualified teams "
+        "are better at turning shots into goals than eliminated teams."
+    )
+
+
+# Save the stratified sample data
 output_file = processed_folder / "stratified_sample_data.csv"
 sample.to_csv(output_file, index=False)
+
+
+# Save descriptive statistics
 output_file1 = processed_folder / "descriptive_statistics.csv"
 descriptive_statistics.to_csv(output_file1, index=False)
+
+
+# Save the boxplot
 boxplot_file = processed_folder / "shots_per_goal_boxplot.png"
-plt.savefig(boxplot_file, dpi=300, bbox_inches="tight")
+
+plt.savefig(
+    boxplot_file,
+    dpi=300,
+    bbox_inches="tight"
+)
+
 plt.show()
 plt.close()

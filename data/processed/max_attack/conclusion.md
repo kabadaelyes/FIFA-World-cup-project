@@ -3,10 +3,20 @@ Statistical Analysis Conclusion
 Method: A one-tailed two-sample t-test was conducted using a significance level of 0.05.
 
 Null hypothesis: Qualified teams do not have a lower average shots per goal than eliminated teams.
+Alternative hypothesis: Qualified teams have a lower average shots per goal than eliminated teams.
+
 (Lower average shots per goal = better attack)
 
-**One-tailed p-value:** 0.0203
+**Qualified average:** 9.3884
+
+**Eliminated average:** 15.9389
+
+**Difference:** -6.5505
+
+**95% CI:** -11.2734 to -1.8275
+
+**One-tailed p-value:** 0.0041
 
 Decision: Reject the null hypothesis.
 
-Conclusion: Qualified teams indeed have a lower average shots per goal than eliminated teams.
+Conclusion: There is statistically significant evidence that qualified teams had a lower average shots per goal than eliminated teams.

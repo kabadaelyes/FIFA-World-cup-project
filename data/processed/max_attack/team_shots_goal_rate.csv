@@ -1,49 +1,49 @@
-Team,Shots,Goals,Shots/Goal,qualification,Average_shots_per_goal,Median_shots_per_goal,Std_shots_per_goal
-Algeria,36,5,7.2,Qualified,8.350040625,6.8143,4.4590250409022305
-Argentina,34,8,4.25,Qualified,8.350040625,6.8143,4.4590250409022305
-Australia,26,2,13.0,Qualified,8.350040625,6.8143,4.4590250409022305
-Austria,27,6,4.5,Qualified,8.350040625,6.8143,4.4590250409022305
-Belgium,73,6,12.1667,Qualified,8.350040625,6.8143,4.4590250409022305
-Bosnia and Herzegovina,27,5,5.4,Qualified,8.350040625,6.8143,4.4590250409022305
-Brazil,41,7,5.8571,Qualified,8.350040625,6.8143,4.4590250409022305
-Canada,58,8,7.25,Qualified,8.350040625,6.8143,4.4590250409022305
-Cape Verde Islands,33,2,16.5,Qualified,8.350040625,6.8143,4.4590250409022305
-Colombia,59,4,14.75,Qualified,8.350040625,6.8143,4.4590250409022305
-Congo DR,34,4,8.5,Qualified,8.350040625,6.8143,4.4590250409022305
-Croatia,24,5,4.8,Qualified,8.350040625,6.8143,4.4590250409022305
-Curaçao,29,1,29.0,Eliminated,15.938886666666667,16.0,7.190472585687522
-Czech Republic,34,2,17.0,Eliminated,15.938886666666667,16.0,7.190472585687522
-Ecuador,46,2,23.0,Qualified,8.350040625,6.8143,4.4590250409022305
-Egypt,48,5,9.6,Qualified,8.350040625,6.8143,4.4590250409022305
-England,58,6,9.6667,Qualified,8.350040625,6.8143,4.4590250409022305
-France,48,10,4.8,Qualified,8.350040625,6.8143,4.4590250409022305
-Germany,53,10,5.3,Qualified,8.350040625,6.8143,4.4590250409022305
-Ghana,15,2,7.5,Qualified,8.350040625,6.8143,4.4590250409022305
-Haiti,31,2,15.5,Eliminated,15.938886666666667,16.0,7.190472585687522
-Iran,37,3,12.3333,Eliminated,15.938886666666667,16.0,7.190472585687522
-Iraq,21,1,21.0,Eliminated,15.938886666666667,16.0,7.190472585687522
-Ivory Coast,31,4,7.75,Qualified,8.350040625,6.8143,4.4590250409022305
-Japan,29,7,4.1429,Qualified,8.350040625,6.8143,4.4590250409022305
-Jordan,24,3,8.0,Eliminated,15.938886666666667,16.0,7.190472585687522
-Mexico,35,6,5.8333,Qualified,8.350040625,6.8143,4.4590250409022305
-Morocco,48,6,8.0,Qualified,8.350040625,6.8143,4.4590250409022305
-Netherlands,40,10,4.0,Qualified,8.350040625,6.8143,4.4590250409022305
-New Zealand,31,4,7.75,Eliminated,15.938886666666667,16.0,7.190472585687522
-Norway,35,8,4.375,Qualified,8.350040625,6.8143,4.4590250409022305
-Panama,32,0,,Eliminated,15.938886666666667,16.0,7.190472585687522
-Paraguay,23,2,11.5,Qualified,8.350040625,6.8143,4.4590250409022305
-Portugal,37,6,6.1667,Qualified,8.350040625,6.8143,4.4590250409022305
-Qatar,17,2,8.5,Eliminated,15.938886666666667,16.0,7.190472585687522
-Saudi Arabia,17,1,17.0,Eliminated,15.938886666666667,16.0,7.190472585687522
-Scotland,29,1,29.0,Eliminated,15.938886666666667,16.0,7.190472585687522
-Senegal,50,8,6.25,Qualified,8.350040625,6.8143,4.4590250409022305
-South Africa,33,2,16.5,Qualified,8.350040625,6.8143,4.4590250409022305
-South Korea,32,2,16.0,Eliminated,15.938886666666667,16.0,7.190472585687522
-Spain,55,5,11.0,Qualified,8.350040625,6.8143,4.4590250409022305
-Sweden,40,7,5.7143,Qualified,8.350040625,6.8143,4.4590250409022305
-Switzerland,45,7,6.4286,Qualified,8.350040625,6.8143,4.4590250409022305
-Tunisia,18,2,9.0,Eliminated,15.938886666666667,16.0,7.190472585687522
-Turkey,71,3,23.6667,Eliminated,15.938886666666667,16.0,7.190472585687522
-USMNT,44,8,5.5,Qualified,8.350040625,6.8143,4.4590250409022305
-Uruguay,49,3,16.3333,Eliminated,15.938886666666667,16.0,7.190472585687522
-Uzbekistan,18,2,9.0,Eliminated,15.938886666666667,16.0,7.190472585687522
+Team,Shots,Goals,Shots/Goal,qualification
+Algeria,36,5,7.2,Qualified
+Argentina,34,8,4.25,Qualified
+Australia,26,2,13.0,Qualified
+Austria,27,6,4.5,Qualified
+Belgium,73,6,12.1667,Qualified
+Bosnia and Herzegovina,27,5,5.4,Qualified
+Brazil,41,7,5.8571,Qualified
+Canada,58,8,7.25,Qualified
+Cape Verde Islands,33,2,16.5,Qualified
+Colombia,59,4,14.75,Qualified
+Congo DR,34,4,8.5,Qualified
+Croatia,24,5,4.8,Qualified
+Curaçao,29,1,29.0,Eliminated
+Czech Republic,34,2,17.0,Eliminated
+Ecuador,46,2,23.0,Qualified
+Egypt,48,5,9.6,Qualified
+England,58,6,9.6667,Qualified
+France,48,10,4.8,Qualified
+Germany,53,10,5.3,Qualified
+Ghana,15,2,7.5,Qualified
+Haiti,31,2,15.5,Eliminated
+Iran,37,3,12.3333,Eliminated
+Iraq,21,1,21.0,Eliminated
+Ivory Coast,31,4,7.75,Qualified
+Japan,29,7,4.1429,Qualified
+Jordan,24,3,8.0,Eliminated
+Mexico,35,6,5.8333,Qualified
+Morocco,48,6,8.0,Qualified
+Netherlands,40,10,4.0,Qualified
+New Zealand,31,4,7.75,Eliminated
+Norway,35,8,4.375,Qualified
+Panama,32,0,,Eliminated
+Paraguay,23,2,11.5,Qualified
+Portugal,37,6,6.1667,Qualified
+Qatar,17,2,8.5,Eliminated
+Saudi Arabia,17,1,17.0,Eliminated
+Scotland,29,1,29.0,Eliminated
+Senegal,50,8,6.25,Qualified
+South Africa,33,2,16.5,Qualified
+South Korea,32,2,16.0,Eliminated
+Spain,55,5,11.0,Qualified
+Sweden,40,7,5.7143,Qualified
+Switzerland,45,7,6.4286,Qualified
+Tunisia,18,2,9.0,Eliminated
+Turkey,71,3,23.6667,Eliminated
+USMNT,44,8,5.5,Qualified
+Uruguay,49,3,16.3333,Eliminated
+Uzbekistan,18,2,9.0,Eliminated

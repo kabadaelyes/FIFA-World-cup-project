@@ -1,21 +1,31 @@
-Team,Shots,Goals,Shots/Goal,qualification,Average_shots_per_goal,Median_shots_per_goal,Std_shots_per_goal
-Sweden,40,7,5.7143,Qualified,8.350040625,6.8143,4.4590250409022305
-France,48,10,4.8,Qualified,8.350040625,6.8143,4.4590250409022305
-Paraguay,23,2,11.5,Qualified,8.350040625,6.8143,4.4590250409022305
-Ghana,15,2,7.5,Qualified,8.350040625,6.8143,4.4590250409022305
-Cape Verde Islands,33,2,16.5,Qualified,8.350040625,6.8143,4.4590250409022305
-Colombia,59,4,14.75,Qualified,8.350040625,6.8143,4.4590250409022305
-Switzerland,45,7,6.4286,Qualified,8.350040625,6.8143,4.4590250409022305
-Portugal,37,6,6.1667,Qualified,8.350040625,6.8143,4.4590250409022305
-Ecuador,46,2,23.0,Qualified,8.350040625,6.8143,4.4590250409022305
-Algeria,36,5,7.2,Qualified,8.350040625,6.8143,4.4590250409022305
-Scotland,29,1,29.0,Eliminated,15.938886666666667,16.0,7.190472585687522
-Tunisia,18,2,9.0,Eliminated,15.938886666666667,16.0,7.190472585687522
-Curaçao,29,1,29.0,Eliminated,15.938886666666667,16.0,7.190472585687522
-Uruguay,49,3,16.3333,Eliminated,15.938886666666667,16.0,7.190472585687522
-Jordan,24,3,8.0,Eliminated,15.938886666666667,16.0,7.190472585687522
-Saudi Arabia,17,1,17.0,Eliminated,15.938886666666667,16.0,7.190472585687522
-Haiti,31,2,15.5,Eliminated,15.938886666666667,16.0,7.190472585687522
-Czech Republic,34,2,17.0,Eliminated,15.938886666666667,16.0,7.190472585687522
-Uzbekistan,18,2,9.0,Eliminated,15.938886666666667,16.0,7.190472585687522
-Iraq,21,1,21.0,Eliminated,15.938886666666667,16.0,7.190472585687522
+Team,Shots,Goals,Shots/Goal,qualification
+Sweden,40,7,5.7143,Qualified
+France,48,10,4.8,Qualified
+Paraguay,23,2,11.5,Qualified
+Ghana,15,2,7.5,Qualified
+Cape Verde Islands,33,2,16.5,Qualified
+Colombia,59,4,14.75,Qualified
+Switzerland,45,7,6.4286,Qualified
+Portugal,37,6,6.1667,Qualified
+Ecuador,46,2,23.0,Qualified
+Algeria,36,5,7.2,Qualified
+Belgium,73,6,12.1667,Qualified
+Germany,53,10,5.3,Qualified
+Bosnia and Herzegovina,27,5,5.4,Qualified
+Egypt,48,5,9.6,Qualified
+Croatia,24,5,4.8,Qualified
+Scotland,29,1,29.0,Eliminated
+Tunisia,18,2,9.0,Eliminated
+Curaçao,29,1,29.0,Eliminated
+Uruguay,49,3,16.3333,Eliminated
+Jordan,24,3,8.0,Eliminated
+Saudi Arabia,17,1,17.0,Eliminated
+Haiti,31,2,15.5,Eliminated
+Czech Republic,34,2,17.0,Eliminated
+Uzbekistan,18,2,9.0,Eliminated
+Iraq,21,1,21.0,Eliminated
+Qatar,17,2,8.5,Eliminated
+South Korea,32,2,16.0,Eliminated
+Turkey,71,3,23.6667,Eliminated
+Iran,37,3,12.3333,Eliminated
+New Zealand,31,4,7.75,Eliminated
