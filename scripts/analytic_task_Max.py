@@ -184,29 +184,11 @@ with open(conclusion_file, "w") as file:
     file.write("(Lower average shots per goal = better attack)\n\n")
     file.write(f"**One-tailed p-value:** {one_tailed_p:.4f}\n\n")
     if one_tailed_p < 0.05:
-        file.write("Decision: Reject the null hypothesis.\n")
+        file.write("Decision: Reject the null hypothesis.\n\n")
         file.write("Conclusion: Qualified teams indeed have a lower average shots per goal than eliminated teams.")
     else:
-        file.write("Decision: Accept the null hypothesis.\n")
+        file.write("Decision: Accept the null hypothesis.\n\n")
         file.write("Conclusion: Qualified teams indeed don't have a lower average shots per goal than eliminated teams.")
-
-
-# Present the conclusion
-def_value = 0.05
-
-print("\nStatistical Decision:")
-if one_tailed_p < def_value:
-    print("Reject the null hypothesis\n")
-    print("There is sufficient evidence that qualified teams have a lower average Shots/Goal")
-else:
-    print("Accept the null hypothesis\n")
-    print("There is insufficient evidence that qualified teams have a lower average Shots/Goal")
-
-print("\nConclusion:")
-if one_tailed_p < def_value:
-    print("Qualified teams are likely to be better at turning shots into goals than eliminated teams")
-else:
-    print("Qualified teams aren't likely to be better at turning shots into goals than eliminated teams")
 
 
 # Save the processed population dataset
