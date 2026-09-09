@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-import statsmodels.stats.weightstats as stm
 import matplotlib.pyplot as plt
 from pathlib import Path
 from scipy import stats
@@ -49,8 +48,8 @@ team_stats = pd.merge(
 # Calculate each team's overall group-stage shots per goal
 # Teams with zero goals cannot have a defined shots/goal value
 team_stats["Shots/Goal"] = (
-    team_stats["Shots"] /
-    team_stats["Goals"].replace(0, np.nan)
+    team_stats["Shots"]
+    / team_stats["Goals"].replace(0, np.nan)
 ).round(4)
 
 
@@ -174,63 +173,67 @@ difference = (
 )
 
 
-# Pooled standard deviation
-pooled_sd = (
+# Standard error for Welch's t-test
+qualified_variance = qualified_shots_goal_rate.var()
+eliminated_variance = eliminated_shots_goal_rate.var()
+
+qualified_n = len(qualified_shots_goal_rate)
+eliminated_n = len(eliminated_shots_goal_rate)
+
+standard_error = np.sqrt(
+    qualified_variance / qualified_n
+    + eliminated_variance / eliminated_n
+)
+
+
+# Welch-Satterthwaite degrees of freedom
+degrees_of_freedom = (
     (
-        (len(qualified_shots_goal_rate) - 1)
-        * qualified_shots_goal_rate.var()
-        +
-        (len(eliminated_shots_goal_rate) - 1)
-        * eliminated_shots_goal_rate.var()
-    )
+        qualified_variance / qualified_n
+        + eliminated_variance / eliminated_n
+    ) ** 2
     /
     (
-        len(qualified_shots_goal_rate)
-        + len(eliminated_shots_goal_rate)
-        - 2
+        (qualified_variance / qualified_n) ** 2
+        / (qualified_n - 1)
+        +
+        (eliminated_variance / eliminated_n) ** 2
+        / (eliminated_n - 1)
     )
-) ** 0.5
-
-
-# Standard error of the difference
-standard_error = pooled_sd * (
-    1 / len(qualified_shots_goal_rate)
-    + 1 / len(eliminated_shots_goal_rate)
-) ** 0.5
-
-
-# 95% confidence interval
-lower, upper = stm._tconfint_generic(
-    difference,
-    standard_error,
-    dof=(
-        len(qualified_shots_goal_rate)
-        + len(eliminated_shots_goal_rate)
-        - 2
-    ),
-    alpha=0.05,
-    alternative="two-sided"
 )
+
+
+# 95% confidence interval for the difference
+critical_value = stats.t.ppf(
+    0.975,
+    degrees_of_freedom
+)
+
+margin_of_error = critical_value * standard_error
+
+lower = difference - margin_of_error
+upper = difference + margin_of_error
 
 
 print("\n95% Confidence Interval:")
 print("Difference:", difference)
 print("Lower:", lower)
 print("Upper:", upper)
+print("Welch degrees of freedom:", degrees_of_freedom)
 
 
-# One-tailed two-sample t-test
+# One-tailed Welch two-sample t-test
 # H0: Qualified teams do not have a lower average Shots/Goal
 # H1: Qualified teams have a lower average Shots/Goal
 t_stat, one_tailed_p = stats.ttest_ind(
     qualified_shots_goal_rate,
     eliminated_shots_goal_rate,
-    equal_var=True,
+    equal_var=False,
     alternative="less"
 )
 
 
-print("\nTwo-sample t-test:")
+print("\nWelch two-sample t-test:")
 print("t-statistic:", t_stat)
 print("One-tailed p-value:", one_tailed_p)
 
@@ -275,8 +278,8 @@ with open(conclusion_file, "w") as file:
     file.write("Statistical Analysis Conclusion\n\n")
 
     file.write(
-        "Method: A one-tailed two-sample t-test was conducted "
-        "using a significance level of 0.05.\n\n"
+        "Method: A one-tailed Welch two-sample t-test was "
+        "conducted using a significance level of 0.05.\n\n"
     )
 
     file.write(
@@ -309,6 +312,11 @@ with open(conclusion_file, "w") as file:
 
     file.write(
         f"**95% CI:** {lower:.4f} to {upper:.4f}\n\n"
+    )
+
+    file.write(
+        f"**Welch degrees of freedom:** "
+        f"{degrees_of_freedom:.4f}\n\n"
     )
 
     file.write(
@@ -367,15 +375,15 @@ print("\nConclusion:")
 if one_tailed_p < alpha:
 
     print(
-        "Qualified teams are likely to be better at turning "
-        "shots into goals than eliminated teams."
+        "There is statistically significant evidence that "
+        "qualified teams had lower Shots/Goal than eliminated teams."
     )
 
 else:
 
     print(
         "There is insufficient evidence that qualified teams "
-        "are better at turning shots into goals than eliminated teams."
+        "had lower Shots/Goal than eliminated teams."
     )
 
 
